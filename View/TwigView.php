@@ -15,7 +15,7 @@
  * @license The MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 if (!defined('TWIG_VIEW_CACHE')) {
-	define('TWIG_VIEW_CACHE', CakePlugin::path('TwigView') . 'tmp' . DS . 'views');
+	define('TWIG_VIEW_CACHE', TMP . 'cache' . DS . 'twig');
 }
 
 $twigPath = CakePlugin::path('TwigView');
@@ -40,7 +40,7 @@ require_once($twigPath . 'Lib' . DS . 'CoreExtension.php');
 
 /**
  * TwigView for CakePHP
- * 
+ *
  * @version 0.5
  * @author Kjell Bublitz <m3nt0r.de@gmail.com>
  * @link http://github.com/m3nt0r/cakephp-twig-view GitHub
@@ -54,24 +54,24 @@ class TwigView extends View {
  *
  * @var string
  */
-	public $ext = '.tpl';
-	
+	public $ext = '.twig';
+
 /**
  * Twig Environment Instance
  *
  * @var Twig_Environment
  */
 	public $Twig;
-	
+
 /**
- * Collection of paths. 
+ * Collection of paths.
  * These are stripped from $___viewFn.
  *
  * @todo overwrite getFilename()
  * @var array
  */
 	public $templatePaths = array();
-	
+
 /**
  * Constructor
  * Overridden to provide Twig loading
@@ -84,19 +84,17 @@ class TwigView extends View {
 		$this->Twig = new Twig_Environment($loader, array(
 			'cache' => TWIG_VIEW_CACHE,
 			'charset' => strtolower(Configure::read('App.encoding')),
-			'auto_reload' => Configure::read('debug') > 0,
-			'autoescape' => false,
 			'debug' => Configure::read('debug') > 0
 		));;
-		
+
 		$this->Twig->addExtension(new CoreExtension);
 		$this->Twig->addExtension(new Twig_Extension_I18n);
 		$this->Twig->addExtension(new Twig_Extension_Ago);
 		$this->Twig->addExtension(new Twig_Extension_Basic);
 		$this->Twig->addExtension(new Twig_Extension_Number);
-		
+
 		parent::__construct($Controller);
-		
+
 		if (isset($Controller->theme)) {
 			$this->theme = $Controller->theme;
 		}
@@ -105,17 +103,17 @@ class TwigView extends View {
 /**
  * Render the view
  *
- * @param string $_viewFn 
- * @param string $_dataForView 
+ * @param string $_viewFn
+ * @param string $_dataForView
  * @return void
  */
 	protected function _render($_viewFn, $_dataForView = array()) {
 		$isCtpFile = (substr($_viewFn, -3) === 'ctp');
-		
+
 		if (empty($_dataForView)) {
 			$_dataForView = $this->viewVars;
 		}
-				
+
 		if ($isCtpFile) {
 			return parent::_render($_viewFn, $_dataForView);
 		}
@@ -132,9 +130,9 @@ class TwigView extends View {
 		if (!isset($_dataForView['cakeDebug'])) {
 			$_dataForView['cakeDebug'] = null;
 		}
-		$data = array_merge($_dataForView, $helpers);	
+		$data = array_merge($_dataForView, $helpers);
 		$data['_view'] = $this;
-		
+
 		$relativeFn = str_replace($this->templatePaths, '', $_viewFn);
 		$template = $this->Twig->loadTemplate($relativeFn);
 		echo $template->render($data);
