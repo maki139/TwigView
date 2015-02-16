@@ -3,7 +3,7 @@
  * Just a hacked version 'include'
  *
  *    {% element "login_form" %}
- *     
+ *
  *     => loads: APP/views/elements/login_form.tpl
  */
 
@@ -62,11 +62,11 @@ class Twig_Node_Element extends Twig_Node {
 /**
  * Constructor
  *
- * @param Twig_Node_Expression $expr 
- * @param Twig_Node_Expression $variables 
+ * @param Twig_Node_Expression $expr
+ * @param Twig_Node_Expression $variables
  * @param bool $only
- * @param string $lineno 
- * @param string $tag 
+ * @param string $lineno
+ * @param string $tag
  */
 	public function __construct(Twig_Node_Expression $expr, Twig_Node_Expression $variables = null, $only = false, $lineno, $tag = null) {
 		parent::__construct(array('expr' => $expr, 'variables' => $variables), array('only' => (Boolean) $only), $lineno, $tag);
@@ -81,7 +81,7 @@ class Twig_Node_Element extends Twig_Node {
 		$compiler->addDebugInfo($this);
 
 		$template = $this->getNode('expr')->getAttribute('value');
-		$value = 'Elements' . DS . $template . '.tpl';
+		$value = 'Elements' . DS . $template . '.twig';
 		$this->getNode('expr')->setAttribute('value', $value);
 
 		if ($this->getNode('expr') instanceof Twig_Node_Expression_Constant) {
